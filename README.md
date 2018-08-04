@@ -23,14 +23,27 @@ If you are using an existing setup, it's best to use a normal user account to ru
 
 So first thing is to create a new user. For this example we will create the user "noia":
 
-Log in to your server as the root user.
+In a terminal window, log in to your server as the root user, using the IP address and password that was emailed to you when you created the droplet on Digital Ocean (or that you already have if you're using an existing setup).
 
-ssh root@server_ip_address
+    ssh root@[server_ip_address]
+    
+you will be prompted to add the server to your list of trusted servers:
+
+    The authenticity of host '206.189.20.36 (206.189.20.36)' can't be established.
+    ECDSA key fingerprint is SHA256:/fKMHo3VMj214t83hR6IKBasZ5m6+xYLqi6gUDMKOi0.
+    Are you sure you want to continue connecting (yes/no)? 
+    
+type YES and press return.
+
+	yes
+
+you will then be prompted to enter your password.
+
 Use the adduser command to add a new user to your system.
 
-Be sure to replace username with the user that you want to create.
+Be sure to replace username with the user that you want to create. In this example we will use "noia" as the user name to keep things simple.
 
-adduser username
+adduser noia
 Set and confirm the new user's password at the prompt. A strong password is highly recommended!
 
 Set password prompts:

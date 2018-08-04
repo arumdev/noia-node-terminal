@@ -8,20 +8,20 @@ guide: https://github.com/Surf-N-Code/noia-node-terminal *
 
 This is a quick tutorial for those wanting to host a NOIA node on a virtual box for example. I have used Digital Ocean for this purpose and setup a Ubuntu 18.04 droplet on the smallest configuration, which is more than adequate for this stage.
 
-If you are interested in signing up on Vultr too, you could use my [ref link](https://m.do.co/c/a2f92f54df25) to sign up. Otherwise just browse to [DigitalOcean](https://www.digitalocean.com) and sign up.
+If you are interested in signing up on Digital Ocean too, you could use my [ref link](https://m.do.co/c/a2f92f54df25) here to sign up, which will give you $10 of free credit to start your first droplet.
+Otherwise just browse to [DigitalOcean](https://www.digitalocean.com) and sign up.
 
-If you need help setting up a VM, contact me here.
+If you need help setting up a droplet, contact me here.
 
 Register and KYC on the NOIA platform
 -------------
+
+If you haven't got one already, create an ERC20 wallet here: [MEW](https://www.myetherwallet.com/). You will need to enter the public key address as part of the KYC process.
+
 [Register here](https://dashboard.noia.network/r/0d304917)
 
-Initial system checks and requirements
+System setup
 -------------
-
-If you are using an existing setup, it's best to use a normal user account to run the node. It may be OK to run as root but I had problems with the setup like that.
-
-So first thing is to create a new user. For this example we will create the user "noia":
 
 In a terminal window, log in to your server as the root user, using the IP address and password that was emailed to you when you created the droplet on Digital Ocean (or that you already have if you're using an existing setup).
 
@@ -37,13 +37,24 @@ type YES and press return.
 
 	yes
 
-you will then be prompted to enter your password.
+you will then be prompted to enter your password. 
 
-Use the adduser command to add a new user to your system.
+If you are using an existing setup, it's best to use a normal user account to run the node. It may be OK to run as root but I had problems with the setup like that.
 
+For our Digital Ocean machine, Our first step is to update the package manager list:
+
+	apt-get update
+	
+Next upgrade to the latest software packages. This may take a few minutes:
+	
+	apt-get upgrade
+
+Now that the machine is up to date, our next step is to create a new user. For this example we will create the user "noia":
+
+Our first step Use the adduser command to add a new user to your system.
 Be sure to replace username with the user that you want to create. In this example we will use "noia" as the user name to keep things simple.
 
-adduser noia
+    adduser noia
 Set and confirm the new user's password at the prompt. A strong password is highly recommended!
 
 Set password prompts:
@@ -53,58 +64,78 @@ passwd: password updated successfully
 Follow the prompts to set the new user's information. It is fine to accept the defaults to leave all of this information blank.
 
 User information prompts:
-Changing the user information for username
-Enter the new value, or press ENTER for the default
-    Full Name []:
-    Room Number []:
-    Work Phone []:
-    Home Phone []:
-    Other []:
-Is the information correct? [Y/n]
+	Changing the user information for username
+	Enter the new value, or press ENTER for the default
+    	Full Name []:
+	    Room Number []:
+    	Work Phone []:
+	    Home Phone []:
+    	Other []:
+	Is the information correct? [Y/n]
+
 Use the usermod command to add the user to the sudo group.
 
-usermod -aG sudo username
+    usermod -aG sudo noia
 By default, on Ubuntu, members of the sudo group have sudo privileges.
 
 Test sudo access on new user account
 
 Use the su command to switch to the new user account.
 
-su - username
+	su - noia
 As the new user, verify that you can use sudo by prepending "sudo" to the command that you want to run with superuser privileges.
 
 sudo command_to_run
 For example, you can list the contents of the /root directory, which is normally only accessible to the root user.
 
-sudo ls -la /root
+	sudo ls -la /root
 The first time you use sudo in a session, you will be prompted for the password of the user account. Enter the password to proceed.
 
 Output:
 [sudo] password for username:
 
+Next use the cd command to change to the user's home directory
+	
+	cd
+	
+and use the print working directory command to check your current position in the directory hierarchy
 
+	pwd
+	
+you should see the following:
+	
+	/home/noia	
 
+If not, repeat the su command above to switch to the user "noia".
+	
 
+Initial system checks and requirements
+-------------
 
---------
+Now we move onto setting the system up to run the noia node.
 
 We need to make sure that systemd is being used for managing deamons. Run the following command. If your system is using upstart, please refer to this great [tutorial]( https://www.digitalocean.com/community/tutorials/the-upstart-event-system-what-it-is-and-how-to-use-it)
 
     ps -p 1 -o comm=
+    
+The result should be:
 
-If you haven't got one already, create an ERC20 wallet here: [MEW](https://www.myetherwallet.com/)
+	systemd 
 
-Node JS and NPM are required for the noia node to run. Install using the commands below
+Node JS and NPM are required for the noia node to run. Install using the commands below, one after the other. Look out for errors or special instructions while they complete, which can take a little while.
 
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  
     sudo apt-get install -y nodejs
+  
     sudo apt-get install build-essential
 
 Noia node installation
 ------------
-I created a new directory below my home directory. You can create it anywhere you like though. I will be using the path: /home/noia in this tutorial.
+We will be working from the "noia" user's home directory: /home/noia in this tutorial.
 
     git clone https://github.com/noia-network/noia-node-terminal.git
+   
     cd /home/noia/noia-node-terminal
 
 This is enough to test the installation using:

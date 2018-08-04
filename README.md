@@ -1,18 +1,80 @@
-Noia Node guide on Ubuntu using terminal only
+Noia Node setup guide on Ubuntu using terminal only
 ==================
 
-This is a quick tutorial for those wanting to host a NOIA node on a virtual box for example. I have used Vultr for this purpose and setup a Ubuntu 16.04 VM.
+* This article is a branch of of a guid by "Surf-N-Code", modified by myself to make it a little
+more user friendly for those new to the command line.
+Those more comfortable with the command line may prefer the original
+guide: https://github.com/Surf-N-Code/noia-node-terminal *
 
-If you are interested in signing up on Vultr too, you could use my [ref link](https://www.vultr.com/?ref=7436414) to sign up. Otherwise just browse to [Vultr](https://www.vultr.com) and sign up.
+This is a quick tutorial for those wanting to host a NOIA node on a virtual box for example. I have used Digital Ocean for this purpose and setup a Ubuntu 18.04 droplet on the smallest configuration, which is more than adequate for this stage.
+
+If you are interested in signing up on Vultr too, you could use my [ref link](https://m.do.co/c/a2f92f54df25) to sign up. Otherwise just browse to [DigitalOcean](https://www.digitalocean.com) and sign up.
 
 If you need help setting up a VM, contact me here.
 
 Register and KYC on the NOIA platform
 -------------
-[Register here](https://dashboard.noia.network/r/14b984b1)
+[Register here](https://dashboard.noia.network/r/0d304917)
 
 Initial system checks and requirements
 -------------
+
+If you are using an existing setup, it's best to use a normal user account to run the node. It may be OK to run as root but I had problems with the setup like that.
+
+So first thing is to create a new user. For this example we will create the user "noia":
+
+Log in to your server as the root user.
+
+ssh root@server_ip_address
+Use the adduser command to add a new user to your system.
+
+Be sure to replace username with the user that you want to create.
+
+adduser username
+Set and confirm the new user's password at the prompt. A strong password is highly recommended!
+
+Set password prompts:
+Enter new UNIX password:
+Retype new UNIX password:
+passwd: password updated successfully
+Follow the prompts to set the new user's information. It is fine to accept the defaults to leave all of this information blank.
+
+User information prompts:
+Changing the user information for username
+Enter the new value, or press ENTER for the default
+    Full Name []:
+    Room Number []:
+    Work Phone []:
+    Home Phone []:
+    Other []:
+Is the information correct? [Y/n]
+Use the usermod command to add the user to the sudo group.
+
+usermod -aG sudo username
+By default, on Ubuntu, members of the sudo group have sudo privileges.
+
+Test sudo access on new user account
+
+Use the su command to switch to the new user account.
+
+su - username
+As the new user, verify that you can use sudo by prepending "sudo" to the command that you want to run with superuser privileges.
+
+sudo command_to_run
+For example, you can list the contents of the /root directory, which is normally only accessible to the root user.
+
+sudo ls -la /root
+The first time you use sudo in a session, you will be prompted for the password of the user account. Enter the password to proceed.
+
+Output:
+[sudo] password for username:
+
+
+
+
+
+--------
+
 We need to make sure that systemd is being used for managing deamons. Run the following command. If your system is using upstart, please refer to this great [tutorial]( https://www.digitalocean.com/community/tutorials/the-upstart-event-system-what-it-is-and-how-to-use-it)
 
     ps -p 1 -o comm=
@@ -35,7 +97,7 @@ I created a new directory below my home directory. You can create it anywhere yo
 This is enough to test the installation using:
 
     npm install
-    
+
     npm start
 
 A couple of things will happen, in the end you should get an error though. Something like this:
@@ -104,7 +166,7 @@ Check if everything works
 ------------
 
 To check whether the node is running type
-    
+
     systemctl | grep noia
 
 You should see something like this:
